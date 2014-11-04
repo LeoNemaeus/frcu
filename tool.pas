@@ -21,7 +21,7 @@ interface
 				end;
 
 	procedure crearLista(var l:t_lista);
-	procedure insertarLista(var l: t_lista);
+	procedure insertarLista(var l: t_lista; var x:t_dato);
 	procedure recorrerListar(l:t_lista);
 	procedure buscar(l:t_lista; bus:string; var dir:t_punt);
 	procedure eliminarLista(l:t_lista; bus:string; var x:t_dato; var exito:boolean);
@@ -35,7 +35,7 @@ implementation
 		l.cab := nil;
 		l.tam := 0;
 	end;
-	procedure insertarLista(var l: t_lista);
+procedure insertarLista(var l: t_lista; var x:t_dato);
 	var
 		dir:t_punt;
 		ant:t_punt;
@@ -45,19 +45,19 @@ implementation
 		
 		dir^.info := x;
 		
-		if(l.cab = null) AND (l.cab^.inf.nom > x.nom) then
+		if(l.cab = nil) AND (l.cab^.info.nom > x.nom) then
 		begin
-			dir^.sig := x.cab;
+			dir^.sig := l.cab;
 			l.cab := dir;
-		end;
+		end
 		else
 		begin
 			ant := l.cab;
 			act := l.cab^.sig;
 			
-			while (act <> null) AND (act^.info.nom < x.nom) do
+			while (act <> nil) AND (act^.info.nom < x.nom) do
 			begin
-				ant := act_;
+				ant := act;
 				act := act^.sig;
 			end;
 			
@@ -69,16 +69,15 @@ implementation
 	
 	procedure recorrerListar(l:t_lista);
 	var
+		aux:t_punt;
 	begin
 		aux := l.cab;
 		
-		while aux <> null
+		while (aux <> nil) do
 		begin
-			with (aux.info)
-			begin
-				writeln(nombre, tel);
-			end;
+			write(aux.info^.nombre, aux.info^.tel);
 		end;
+		aux := aux^.sig;
 	end;
 	
 	procedure buscar(l:t_lista; bus:string; var dir:t_punt);
@@ -86,11 +85,11 @@ implementation
 		aux:t_punt;
 	begin
 		aux := l.cab;
-		while (aux <> null) AND (aux^.info.tel) do
+		while (aux <> nil) AND (aux^.info.tel) do
 		begin
 			aux := aux^.sig;
-			if ( aux<> null) AND (aux^.info.nom  = bus) then dir := aux
-			else dir := nullL;
+			if ( aux<> nil) AND (aux^.info.nom  = bus) then dir := aux
+			else dir := nilL;
 		end;
 	end;
 	
@@ -101,7 +100,7 @@ implementation
 	begin
 		if l.cab^.info.nom = bus then
 		begin
-			x := l.cab.info;
+			x := l.cab^.info;
 			act := l.cab;
 			l.cab := act^.sig;
 			dispose(act);
@@ -113,12 +112,12 @@ implementation
 			ant := l.cab;
 			act := l.cab^.sig;
 			
-			while (act <> null) AND (act^info.nom < bus) do
+			while (act <> nil) AND (act^info.nom < bus) do
 			begin
 				ant := act;
 				act := act^.sig;
 			end;
-			if (act <> null) AND (act^.info.nom = bus) then
+			if (act <> nil) AND (act^.info.nom = bus) then
 			begin
 				x :0 act^.info;
 				exito := true;
@@ -134,7 +133,7 @@ implementation
 	
 	function listaVacia(l: t_lista): boolean;var
 	begin
-		if l.cab = null then listaVacia := true
+		if l.cab = nil then listaVacia := true
 		else listaVacia := false;
 	end;
 	
