@@ -24,3 +24,9 @@ interface
 					l:lEnvio;
 					end;
 		vSucursal = array[1..n] of tSucursal;
+		
+		tStats = record
+					sucursal:string[50];
+					envios:word;
+					total:real;
+				end;
