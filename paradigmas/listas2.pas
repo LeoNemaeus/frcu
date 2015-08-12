@@ -1,0 +1,103 @@
+unit listas2;
+interface
+uses tipos, ui, sysutils;
+type
+  pNodo = ^tNodo;
+  tNodo = record
+    info:tContacto;
+    sig:pNodo;
+  end;
+  tLista = record
+    cab: pNodo;
+  end;
+
+function insertarlista (var l: tLista; var x: tContacto):boolean;
+function buscarLista(var lista:tLista; buscado:string; var salida:pNodo):boolean;
+function removerLista(var lista:tLista; item:pNodo):boolean;
+function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
+procedure recorrerLista(lista:tLista);
+
+implementation
+
+function insertarlista (var l: tLista; var x: tContacto):boolean;
+var dir: pNodo; ant: pNodo; act : pNodo;
+begin
+new (dir);
+dir^.info := x;
+if (l.cab = nil) or (l.cab^.info.nombre > x.nombre) then
+   begin
+   dir^.sig := l.cab;
+   l.cab := dir;
+   end
+else
+    begin
+    ant := l.cab;
+    act := l.cab^.sig;
+    while (act <> nil) and (act^.info.nombre < x.nombre) do
+          begin
+          ant := act;
+          act := act^.sig;
+          end;
+    ant^.sig := dir;
+    dir^.sig := act;
+    end;
+    insertarLista := true;
+end;
+function buscarLista(var lista:tLista; buscado:string; var salida:pNodo):boolean;
+var
+  actual:pNodo;
+begin
+  actual :=  lista.cab;
+  while (ansiCompareStr(actual^.info.nombre, buscado) <= 0) and (actual <> nil) do
+  begin
+    actual := actual^.sig;
+  end;
+
+  if (actual <> nil) and ((actual^.info.nombre = buscado) or (pos(buscado, actual^.info.nombre) <> 0)) then
+  begin
+    salida := actual;
+    buscarLista := true
+  end
+  else
+  begin
+    buscarLista := false
+  end;
+end;
+function removerLista(var lista:tLista; item:pNodo):boolean;
+var
+  actual, anterior:pNodo;
+begin
+  if item <> nil then
+  begin
+    actual := lista.cab;
+    while(actual <> nil) and (actual <> item) do
+    begin
+      anterior := actual;
+      actual := actual^.sig;
+    end;
+    anterior^.sig := actual^.sig;
+    dispose(actual);
+    removerLista := true;
+  end
+  else
+    removerLista := false;
+end;
+function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
+begin
+  if nodo <> nil then
+    obtenerItem := nodo^.info;
+end;
+
+procedure recorrerLista(lista:tLista);
+var
+  actual:pNodo;
+  begin
+  actual := lista.cab;
+
+while(actual <> nil) do
+  begin
+    mostrarContacto(actual^.info);
+    actual := actual^.sig;
+  end;
+end;
+end.
