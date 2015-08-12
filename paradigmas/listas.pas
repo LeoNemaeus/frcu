@@ -9,19 +9,41 @@ interface
 uses
   Sysutils;
 
-type
-  pNodo = word;
-  tLista = record
-    cab: pNodo;
-  end;
-
 function insertarlista (var l: tLista; var x: tContacto):boolean;
 function buscarLista(var lista:tLista; buscado:string; var salida:pNodo):boolean;
-function removerLista(var lista:tLista; item:pNodo):boolean;
+procedure removerLista(var lista:tLista; buscado:string; var x:tContacto; var exito:boolean);
 function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
 procedure recorrerLista(lista:tLista);
 
 implementation
+
+
+procedure ordenar(var v:vector; var lim: word);
+var
+  aux:tcontacto;
+  i:word;
+  j:word;
+begin
+  for i := 1 to lim do
+  begin
+    for j := 1 to lim do
+    begin
+      if (v[i].apellido >= v[j].apellido) then
+      begin
+        aux := v[i];
+        v[i] := v[j];
+        v[i] := aux;
+      end;
+    end;
+  end;
+end;
+
+function insertarlista (var l: tLista; var x: tContacto):boolean;
+var dir: pNodo; ant: pNodo; act : pNodo;
+begin
+  seekEOF(archivo);
+  ordenar(archivo);
+end;  // #FIN DE INSERTARLISTA()
 
 function abrirArchivo(var archivo:TextFile; ruta:string):boolean;
 begin
@@ -49,7 +71,7 @@ begin
   closeFile(archivo);
 end;
 
-function leerCaracter(var archivo:TextFile):char;
+function leer(var archivo:TextFile; ):char;
 var
   salida:char;
 begin
@@ -59,11 +81,6 @@ begin
     leerCaracter := salida;
   end;
 end;
-
-function insertarlista (var l: tLista; var x: tContacto):boolean;
-begin
-  
-end;  // #FIN DE INSERTARLISTA()
 
 initialization
 begin

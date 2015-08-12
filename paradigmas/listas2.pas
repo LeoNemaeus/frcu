@@ -1,19 +1,10 @@
 unit listas2;
 interface
 uses tipos, ui, sysutils;
-type
-  pNodo = ^tNodo;
-  tNodo = record
-    info:tContacto;
-    sig:pNodo;
-  end;
-  tLista = record
-    cab: pNodo;
-  end;
 
 function insertarlista (var l: tLista; var x: tContacto):boolean;
 function buscarLista(var lista:tLista; buscado:string; var salida:pNodo):boolean;
-function removerLista(var lista:tLista; item:pNodo):boolean;
+procedure removerLista(var lista:tLista; buscado:string; var x:tContacto; var exito:boolean);
 function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
 procedure recorrerLista(lista:tLista);
 
@@ -48,12 +39,12 @@ var
   actual:pNodo;
 begin
   actual :=  lista.cab;
-  while (ansiCompareStr(actual^.info.nombre, buscado) <= 0) and (actual <> nil) do
+  while (ansiCompareStr(actual^.info.nombre, buscado) < 0) and (actual <> nil) do
   begin
     actual := actual^.sig;
   end;
 
-  if (actual <> nil) and ((actual^.info.nombre = buscado) or (pos(buscado, actual^.info.nombre) <> 0)) then
+  if (actual <> nil) and ((actual^.info.nombre = buscado) or (pos(buscado, actual^.info.nombre) > 0)) then
   begin
     salida := actual;
     buscarLista := true
@@ -63,24 +54,38 @@ begin
     buscarLista := false
   end;
 end;
-function removerLista(var lista:tLista; item:pNodo):boolean;
+procedure removerLista(var lista:tLista; buscado:string; var x:tContacto; var exito:boolean);
 var
   actual, anterior:pNodo;
 begin
-  if item <> nil then
+  if (lista.cab^.info.nombre = buscado) or (pos(buscado, lista.cab^.info.nombre) > 0) then
+  begin
+    x := lista.cab^.info;
+    actual := lista.cab;
+    lista.cab := lista.cab^.sig;
+    dispose(actual);
+    exito := true
+  end
+  else
   begin
     actual := lista.cab;
-    while(actual <> nil) and (actual <> item) do
+    anterior := actual;
+    while (ansiCompareStr(actual^.info.nombre, buscado) < 0) and (actual <> nil) do
     begin
       anterior := actual;
       actual := actual^.sig;
     end;
-    anterior^.sig := actual^.sig;
-    dispose(actual);
-    removerLista := true;
-  end
-  else
-    removerLista := false;
+
+    if (actual <> nil) and ((actual^.info.nombre = buscado) or (pos(buscado, actual^.info.nombre) > 0)) then
+    begin
+      x := actual^.info;
+      anterior^.sig := actual^.sig;
+      dispose(actual);
+      exito := true;
+    end
+    else
+      exito := false
+  end;
 end;
 function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
 begin

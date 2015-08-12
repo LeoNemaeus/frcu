@@ -1,6 +1,6 @@
 program programaAgenda;
 
-uses listas2, ui, sysutils, tipos;
+uses funcionalidad, sysutils, tipos, ui, listas2;
 
 procedure opcionAgregarContacto(var agenda:tAgenda);
 var
@@ -34,16 +34,33 @@ end;
 
 procedure opcionModificarContacto(var agenda:tAgenda);
 var
+    contacto, x:tContacto;
+    nombre:string;
+begin
+    writeln('Ingrese el nombre de la persona que desea buscar: ');
+    readln(nombre);
+    if buscarContacto(agenda, nombre, contacto) then
+    begin
+        cargarContacto(contacto);
+        if eliminarContacto(agenda, nombre, x) then
+            agregarContacto(agenda, contacto)
+    end
+    else
+        writeln('Error, contacto no encontrado');
+end;
+
+
+procedure opcionRemoverContacto(var agenda:tAgenda);
+var
     contacto:tContacto;
     nombre:string;
 begin
     writeln('Ingrese el nombre de la persona que desea buscar: ');
-    read(nombre);
-    if buscarContacto(agenda, nombre, contacto) then
+    readln(nombre);
+    if eliminarContacto(agenda, nombre, contacto) then
     begin
-        cargarContacto(contacto);
-        eliminarContacto(agenda, nombre);
-        agregarContacto(agenda, contacto)
+        mostrarContacto(contacto);
+        writeln('Contacto eliminado correctamente');
     end
     else
         writeln('Error, contacto no encontrado');
@@ -64,7 +81,7 @@ begin
         2:opcionListarContactos(agenda);
         3:opcionBuscarContacto(agenda);
         4:opcionModificarContacto(agenda);
-        {5:opcionRemoverContacto(agenda);}
+        5:opcionRemoverContacto(agenda);
         end;
     end
     until opcion = 0;
