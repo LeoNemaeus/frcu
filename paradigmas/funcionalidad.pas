@@ -1,12 +1,23 @@
 unit funcionalidad;
 interface
 uses listas2, ui, tipos;
+type
+    tAgenda = class
+        contactos:record
+            idPersona:word;
+            nombre:string[30];
+            telefono:longint;
+            domicilio:string[15];
+        end;
+        function buscarContacto(agenda:tAgenda; buscar:string; var contacto:tContacto):boolean;
+        function agregarContacto(var agenda:tAgenda; contacto:tContacto):boolean;
+        procedure listarContactos(agenda:tAgenda);
+        function eliminarContacto(var agenda:tAgenda; buscar:string; var x:tContacto):boolean;
+        procedure limpiar(var contacto:tContacto);
+    end;
 
-function buscarContacto(agenda:tAgenda; buscar:string; var contacto:tContacto):boolean;
-function agregarContacto(var agenda:tAgenda; contacto:tContacto):boolean;
-procedure listarContactos(agenda:tAgenda);
-function eliminarContacto(var agenda:tAgenda; buscar:string; var x:tContacto):boolean;
-procedure limpiar(var contacto:tContacto);
+
+
 implementation
 procedure limpiar(var contacto:tContacto);
 begin
@@ -62,7 +73,8 @@ end;
 
 procedure listarContactos(agenda:tAgenda);
 begin
-    recorrerLista(agenda.lista);
+    obtener
+    avanzarLista(agenda.lista);
 end;
 
 function eliminarContacto(var agenda:tAgenda; buscar:string; var x:tContacto):boolean;

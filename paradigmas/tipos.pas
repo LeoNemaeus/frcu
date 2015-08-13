@@ -31,7 +31,7 @@ type
     sig:pNodo;
   end;
   tLista = record
-    cab: pNodo;
+    cab,actual: pNodo;
   end;
     tAgenda = record
         lista:tLista;

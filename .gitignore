@@ -215,8 +215,13 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+#FPC output files
+*.o
+*.ppu
+
 #############
 ## Custom folders
 #############
 
 año-1/cuatrimestre-1/
+paradigmas/programaAgenda
