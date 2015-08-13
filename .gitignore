@@ -129,6 +129,10 @@ publish/
 *.pubxml
 *.publishproj
 
+# Pascal files
+*.o
+*.ppu
+
 # NuGet Packages Directory
 ## TODO: If you have NuGet Package Restore enabled, uncomment the next line
 #packages/
