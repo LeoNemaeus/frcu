@@ -1,0 +1,54 @@
+unit objetoarchivo;
+
+interface
+
+uses crt;
+
+type
+
+archivo= object
+
+procedure abrir;
+procedure cerrar;
+procedure leer (var registro:t_rega);
+procedure guardar (var registro:t_rega);
+end;
+
+implementation
+
+
+procedure object.abrir;
+begin
+     assign(archivo,ruta);
+     {$I-}
+     reset(archivo);
+     {$I+}
+     if Ioresult<>0 then
+     begin
+     rewrite(archivo);
+     close(archivo);
+     reset(archivo);
+     end;
+end;
+
+procedure object.cerrar (var archivo:t_archivo);
+begin
+     close(archivo);
+end;
+
+procedure object.leer (var registro:t_rega);
+begin
+     if filesize(archivo)<>0 then
+     begin
+     seek(archivo,filesize(archivo)-1);
+     read(archivo,registro);
+     end;
+
+end;
+
+procedure object.guardar (var registro:t_rega);
+begin
+     seek(archivo,filesize(archivo));
+     write(archivo,registro);
+end;
+end.
