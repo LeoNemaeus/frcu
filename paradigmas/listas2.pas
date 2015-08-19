@@ -2,22 +2,37 @@ unit listas2;
 interface
 uses tipos, ui, sysutils;
 
-inicializar()
-function insertarlista (var l: tLista; var x: tContacto):boolean;
+type
+  pNodo = ^tNodo;
+  tNodo = record
+    info:tContacto;
+    sig:pNodo;
+  end;
+  tLista = record
+    cab, actual: pNodo;
+    tam:word;
+  end;
+
+procedure  inicializar(var lista:tLista);
+function agregarlista (var l: tLista; var x: tContacto):boolean;
 function buscarLista(var lista:tLista; buscado:string; var salida:pNodo):boolean;
 procedure removerLista(var lista:tLista; buscado:string; var x:tContacto; var exito:boolean);
-function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
-procedure recorrerLista(lista:tLista);
-primero()
-siguiente()
-leer(lista, elem)
-fin():boolean
-finalizar()
+function leerLista(var lista:tLista):tContacto;
+procedure primeroLista(var lista:tLista);
+procedure siguienteLista(var lista:tLista);
+function finLista(var lista:tLista):boolean;
+procedure finalizarLista(var lista:tLista);
 
 
 implementation
+procedure  inicializar(var lista:tLista);
+begin
+  lista.cab := nil;
+  lista.actual := nil;
+  lista.tam := 0;
+end;
 
-function insertarlista (var l: tLista; var x: tContacto):boolean;
+function agregarlista (var l: tLista; var x: tContacto):boolean;
 var dir: pNodo; ant: pNodo; act : pNodo;
 begin
 new (dir);
@@ -26,6 +41,7 @@ if (l.cab = nil) or (l.cab^.info.nombre > x.nombre) then
    begin
    dir^.sig := l.cab;
    l.cab := dir;
+   inc(l.tam)
    end
 else
     begin
@@ -39,21 +55,21 @@ else
     ant^.sig := dir;
     dir^.sig := act;
     end;
-    insertarLista := true;
+inc(l.tam);
+insertarLista := true;
 end;
+
 function buscarLista(var lista:tLista; buscado:string; var salida:pNodo):boolean;
-var
-  actual:pNodo;
 begin
-  actual :=  lista.cab;
-  while (ansiCompareStr(actual^.info.nombre, buscado) < 0) and (actual <> nil) do
+  primeroLista(lista);
+  while (ansiCompareStr(lista.actual^.info.nombre, buscado) < 0) and (not finLista(lista)) do
   begin
-    actual := actual^.sig;
+    siguienteLista(lista)
   end;
 
-  if (actual <> nil) and ((actual^.info.nombre = buscado) or (pos(buscado, actual^.info.nombre) > 0)) then
+  if (finLista(lista)) and ((lista.actual^.info.nombre = buscado) or (pos(buscado, actual^.info.nombre) > 0)) then
   begin
-    salida := actual;
+    salida := lista.actual;
     buscarLista := true
   end
   else
@@ -61,7 +77,8 @@ begin
     buscarLista := false
   end;
 end;
-procedure removerLista(var lista:tLista; buscado:string; var x:tContacto; var exito:boolean);
+
+function removerLista(var lista:tLista; buscado:string; var x:tContacto):boolean;
 var
   actual, anterior:pNodo;
 begin
@@ -71,6 +88,7 @@ begin
     actual := lista.cab;
     lista.cab := lista.cab^.sig;
     dispose(actual);
+    dec(lista.tam);
     exito := true
   end
   else
@@ -88,28 +106,43 @@ begin
       x := actual^.info;
       anterior^.sig := actual^.sig;
       dispose(actual);
+      dec(lista.tam);
       exito := true;
     end
     else
       exito := false
   end;
 end;
-function obtenerItem(lista:tLista; nodo:pNodo):tContacto;
+
+{
+  # Lee el elemento al que apunta Actual.
+}
+function leerLista(var lista:tLista):tContacto;
 begin
   if nodo <> nil then
-    obtenerItem := nodo^.info;
+    leerLista := lista.actual^.info;
 end;
 
-procedure avanzarLista(lista:tLista);
-var
-  actual:pNodo;
+procedure primeroLista(var lista:tLista);
 begin
-  actual := lista.cab;
+  lista.actual := lista.cab;
+end;
 
-while(actual <> nil) do
+procedure siguienteLista(var lista:tLista);
+begin
+  lista.actual := lista.actual^.sig;
+end;
+
+function finLista(var lista:tLista):boolean;
+begin
+  fin:= (lista.actual = nil);
+end;
+
+procedure finalizarLista(var lista:tLista);
+begin
+  while (lista.actual <> nil)
   begin
-    mostrarContacto(actual^.info);
-    actual := actual^.sig;
+    removerLista(lista, )
   end;
 end;
 end.

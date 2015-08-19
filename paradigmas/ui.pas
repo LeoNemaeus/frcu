@@ -7,30 +7,15 @@ procedure limpiar(var contacto:tContacto);
 procedure mostrarContacto(var contacto:tContacto);
 
 implementation
-procedure limpiar(var contacto:tContacto);
-begin
-    contacto.idPersona := 0;
-    contacto.nombre := '';
-    contacto.telefono := 0;
-    contacto.domicilio := '';
-end;
-procedure mostrarContacto(var contacto:tContacto);
-begin
-    writeln('idPersona: ', contacto.idPersona);
-    writeln('nombre: ', contacto.nombre);
-    writeln('telefono: ', contacto.telefono);
-    writeln('domicilio: ', contacto.domicilio);
-end;
-
-procedure cargarContacto(var contacto:tContacto);
+procedure cargar_contacto();
 begin
     write('Ingrese apellido y nombre (', contacto.nombre , '): ');
-    readln(contacto.nombre);
+    readln(aux.nombre);
 
     write('Ingrese telefono (', contacto.telefono, '): ');
-    readln(contacto.telefono);
+    readln(aux.telefono);
 
     write('Ingrese domicilio (', contacto.domicilio, '): ');
-    readln(contacto.domicilio);
+    readln(aux.domicilio);
 end;
 end.
